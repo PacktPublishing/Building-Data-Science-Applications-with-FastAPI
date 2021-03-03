@@ -1,0 +1,6 @@
+fastapi==0.63.0
+uvicorn[standard]==0.13.4
+
+black
+mypy
+pytest
