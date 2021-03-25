@@ -1,6 +1,9 @@
 fastapi==0.63.0
 uvicorn[standard]==0.13.4
 
+asgi-lifespan
 black
+httpx
 mypy
 pytest
+pytest-asyncio
