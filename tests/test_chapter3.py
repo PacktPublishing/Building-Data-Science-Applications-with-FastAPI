@@ -3,14 +3,14 @@ import pytest
 from fastapi import status
 
 from chapter3.chapter3_first_endpoint_01 import app as chapter3_first_endpoint_01_app
-from chapter3.chapter3_request_parameters_01 import (
-    app as chapter3_request_parameters_01_app,
+from chapter3.chapter3_path_parameters_01 import (
+    app as chapter3_path_parameters_01_app,
 )
-from chapter3.chapter3_request_parameters_02 import (
-    app as chapter3_request_parameters_02_app,
+from chapter3.chapter3_path_parameters_02 import (
+    app as chapter3_path_parameters_02_app,
 )
-from chapter3.chapter3_request_parameters_03 import (
-    app as chapter3_request_parameters_03_app,
+from chapter3.chapter3_path_parameters_03 import (
+    app as chapter3_path_parameters_03_app,
 )
 from chapter3.chapter3_query_parameters_01 import (
     app as chapter3_query_parameters_01_app,
@@ -31,9 +31,9 @@ class TestFirstEndpoint01:
         assert json == {"hello": "world"}
 
 
-@pytest.mark.fastapi(app=chapter3_request_parameters_01_app)
+@pytest.mark.fastapi(app=chapter3_path_parameters_01_app)
 @pytest.mark.asyncio
-class TestRequestParameters01:
+class TestPathParameters01:
     async def test_get_without_id(self, client: httpx.AsyncClient):
         response = await client.get("/users/")
         assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -50,9 +50,9 @@ class TestRequestParameters01:
         assert json == {"id": 123}
 
 
-@pytest.mark.fastapi(app=chapter3_request_parameters_02_app)
+@pytest.mark.fastapi(app=chapter3_path_parameters_02_app)
 @pytest.mark.asyncio
-class TestRequestParameters02:
+class TestPathParameters02:
     async def test_get_company_id(self, client: httpx.AsyncClient):
         response = await client.get("/users/standard/123")
 
@@ -61,9 +61,9 @@ class TestRequestParameters02:
         assert json == {"type": "standard", "id": 123}
 
 
-@pytest.mark.fastapi(app=chapter3_request_parameters_03_app)
+@pytest.mark.fastapi(app=chapter3_path_parameters_03_app)
 @pytest.mark.asyncio
-class TestRequestParameters03:
+class TestPathParameters03:
     async def test_get_invalid_type(self, client: httpx.AsyncClient):
         response = await client.get("/users/foo/123")
 
