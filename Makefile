@@ -5,4 +5,4 @@ typecheck:
 	mypy --exclude venv/ .
 
 test: lint typecheck
-	pytest
+	pytest --cov=chapter2 --cov=chapter3 --cov-report=term-missing

@@ -3,7 +3,9 @@ uvicorn[standard]==0.13.4
 
 asgi-lifespan
 black
+codecov
 httpx
 mypy
 pytest
 pytest-asyncio
+pytest-cov

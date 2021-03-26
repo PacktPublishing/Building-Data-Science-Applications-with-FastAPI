@@ -13,6 +13,8 @@ def test_chapter2():
     runpy.run_module("chapter2.chapter2_list_comprehensions_03")
     runpy.run_module("chapter2.chapter2_list_comprehensions_04")
     runpy.run_module("chapter2.chapter2_list_comprehensions_05")
+    runpy.run_module("chapter2.chapter2_list_comprehensions_06")
+    runpy.run_module("chapter2.chapter2_list_comprehensions_07")
     runpy.run_module("chapter2.chapter2_classes_objects_01")
     runpy.run_module("chapter2.chapter2_classes_objects_02")
     runpy.run_module("chapter2.chapter2_classes_objects_03")
