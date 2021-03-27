@@ -64,18 +64,21 @@ jobs:
         npm install -g terminalizer
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Set script name
+      run: |
+        echo "script_name=$(basename ${{ matrix.script }})" >> $GITHUB_ENV
     - name: Record session
       run: |
         echo "python ${{ matrix.script }}" | ./.cia-generator/record-session.exp ${{ matrix.script }}
     - name: Generate GIF
       run: |
-        xvfb-run --server-args "-screen 0 1280x800x24 -extension GLX" --auto-servernum terminalizer render -o ${{ matrix.script }}.gif ${{ matrix.script }}.yml
+        xvfb-run --server-args "-screen 0 1280x800x24 -extension GLX" --auto-servernum terminalizer render -o ${{ env.script_name }}.gif ${{ env.script_name }}.yml
     - name: Convert GIF to MP4
       run: |
-        ffmpeg -i ${{ matrix.script }}.gif -pix_fmt yuv420p ${{ matrix.script }}.mp4
+        ffmpeg -i ${{ env.script_name }}.gif -pix_fmt yuv420p ${{ env.script_name }}.mp4
     - name: Upload MP4
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ matrix.script }}
+        name: ${{ env.script_name }}
         path: |
           *.mp4
