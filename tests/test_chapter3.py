@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import httpx
 import pytest
 from fastapi import status
@@ -29,6 +31,30 @@ from chapter3.chapter3_query_parameters_02 import (
 )
 from chapter3.chapter3_query_parameters_03 import (
     app as chapter3_query_parameters_03_app,
+)
+from chapter3.chapter3_request_body_01 import (
+    app as chapter3_request_body_01_app,
+)
+from chapter3.chapter3_request_body_02 import (
+    app as chapter3_request_body_02_app,
+)
+from chapter3.chapter3_request_body_03 import (
+    app as chapter3_request_body_03_app,
+)
+from chapter3.chapter3_request_body_04 import (
+    app as chapter3_request_body_04_app,
+)
+from chapter3.chapter3_form_data_01 import (
+    app as chapter3_form_data_01_app,
+)
+from chapter3.chapter3_file_uploads_01 import (
+    app as chapter3_file_uploads_01_app,
+)
+from chapter3.chapter3_file_uploads_02 import (
+    app as chapter3_file_uploads_02_app,
+)
+from chapter3.chapter3_file_uploads_03 import (
+    app as chapter3_file_uploads_03_app,
 )
 
 
@@ -207,7 +233,9 @@ class TestQueryParameters03:
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     @pytest.mark.parametrize("page,size", [(0, 5), (1, 150), (0, 150)])
-    async def test_get_out_of_range_parameters(self, client: httpx.AsyncClient, page: int, size: int):
+    async def test_get_out_of_range_parameters(
+        self, client: httpx.AsyncClient, page: int, size: int
+    ):
         response = await client.get("/users", params={"page": page, "size": size})
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -225,3 +253,181 @@ class TestQueryParameters03:
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
         assert json == {"page": 5, "size": 100}
+
+
+@pytest.mark.fastapi(app=chapter3_request_body_01_app)
+@pytest.mark.asyncio
+class TestRequestBody01:
+    @pytest.mark.parametrize(
+        "payload", [{}, {"name": "John"}, {"name": "John", "age": "Doe"}]
+    )
+    async def test_get_wrong_payload(
+        self, client: httpx.AsyncClient, payload: Dict[str, Any]
+    ):
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_payload(self, client: httpx.AsyncClient):
+        payload = {"name": "John", "age": 30}
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_request_body_02_app)
+@pytest.mark.asyncio
+class TestRequestBody02:
+    @pytest.mark.parametrize(
+        "payload", [{}, {"name": "John"}, {"name": "John", "age": "Doe"}]
+    )
+    async def test_get_wrong_payload(
+        self, client: httpx.AsyncClient, payload: Dict[str, Any]
+    ):
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_payload(self, client: httpx.AsyncClient):
+        payload = {"name": "John", "age": 30}
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_request_body_03_app)
+@pytest.mark.asyncio
+class TestRequestBody03:
+    @pytest.mark.parametrize(
+        "payload",
+        [
+            {},
+            {"user": {}, "company": {}},
+            {"user": {"name": "John", "age": "Doe"}, "company": {"name": "ACME"}},
+        ],
+    )
+    async def test_get_wrong_payload(
+        self, client: httpx.AsyncClient, payload: Dict[str, Any]
+    ):
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_payload(self, client: httpx.AsyncClient):
+        payload = {"user": {"name": "John", "age": 30}, "company": {"name": "ACME"}}
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_request_body_04_app)
+@pytest.mark.asyncio
+class TestRequestBody04:
+    @pytest.mark.parametrize(
+        "payload",
+        [
+            {},
+            {"user": {}, "priority": "foo"},
+            {"user": {"name": "John", "age": "Doe"}, "priority": 1},
+            {"user": {"name": "John", "age": 30}, "priority": 0},
+        ],
+    )
+    async def test_get_wrong_payload(
+        self, client: httpx.AsyncClient, payload: Dict[str, Any]
+    ):
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_payload(self, client: httpx.AsyncClient):
+        payload = {"user": {"name": "John", "age": 30}, "priority": 1}
+        response = await client.post("/users", json=payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_form_data_01_app)
+@pytest.mark.asyncio
+class TestFormData01:
+    @pytest.mark.parametrize(
+        "payload", [{}, {"name": "John"}, {"name": "John", "age": "Doe"}]
+    )
+    async def test_get_wrong_payload(
+        self, client: httpx.AsyncClient, payload: Dict[str, Any]
+    ):
+        response = await client.post("/users", data=payload)
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_payload(self, client: httpx.AsyncClient):
+        payload = {"name": "John", "age": 30}
+        response = await client.post("/users", data=payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_file_uploads_01_app)
+@pytest.mark.asyncio
+class TestFileUploads01:
+    async def test_get_missing_file(self, client: httpx.AsyncClient):
+        response = await client.post("/upload")
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_file(self, client: httpx.AsyncClient):
+        response = await client.post("/upload", files={"file": b"Hello"})
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"file_size": 5}
+
+
+@pytest.mark.fastapi(app=chapter3_file_uploads_02_app)
+@pytest.mark.asyncio
+class TestFileUploads02:
+    async def test_get_missing_file(self, client: httpx.AsyncClient):
+        response = await client.post("/upload")
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_file(self, client: httpx.AsyncClient):
+        response = await client.post("/upload", files={"file": ("hello.txt", b"Hello")})
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"file_name": "hello.txt", "content_type": "text/plain"}
+
+
+@pytest.mark.fastapi(app=chapter3_file_uploads_03_app)
+@pytest.mark.asyncio
+class TestFileUploads03:
+    async def test_get_missing_files(self, client: httpx.AsyncClient):
+        response = await client.post("/upload")
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_get_valid_files(self, client: httpx.AsyncClient):
+        response = await client.post(
+            "/upload",
+            files=[
+                ("files", ("hello1.txt", b"Hello")),
+                ("files", ("hello2.txt", b"Hello")),
+            ],
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == [
+            {"file_name": "hello1.txt", "content_type": "text/plain"},
+            {"file_name": "hello2.txt", "content_type": "text/plain"},
+        ]
