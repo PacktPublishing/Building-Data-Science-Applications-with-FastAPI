@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import httpx
 import pytest
@@ -55,6 +55,18 @@ from chapter3.chapter3_file_uploads_02 import (
 )
 from chapter3.chapter3_file_uploads_03 import (
     app as chapter3_file_uploads_03_app,
+)
+from chapter3.chapter3_headers_cookies_01 import (
+    app as chapter3_headers_cookies_01_app,
+)
+from chapter3.chapter3_headers_cookies_02 import (
+    app as chapter3_headers_cookies_02_app,
+)
+from chapter3.chapter3_headers_cookies_03 import (
+    app as chapter3_headers_cookies_03_app,
+)
+from chapter3.chapter3_request_object_01 import (
+    app as chapter3_request_object_01_app,
 )
 
 
@@ -431,3 +443,62 @@ class TestFileUploads03:
             {"file_name": "hello1.txt", "content_type": "text/plain"},
             {"file_name": "hello2.txt", "content_type": "text/plain"},
         ]
+
+
+@pytest.mark.fastapi(app=chapter3_headers_cookies_01_app)
+@pytest.mark.asyncio
+class TestHeadersCookies01:
+    async def test_missing_header(self, client: httpx.AsyncClient):
+        response = await client.get("/")
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_valid_header(self, client: httpx.AsyncClient):
+        response = await client.get("/", headers={"Hello": "World"})
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"hello": "World"}
+
+
+@pytest.mark.fastapi(app=chapter3_headers_cookies_02_app)
+@pytest.mark.asyncio
+class TestHeadersCookies02:
+    async def test_missing_header(self, client: httpx.AsyncClient):
+        client.headers.pop("User-Agent")
+        response = await client.get("/")
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    async def test_valid_header(self, client: httpx.AsyncClient):
+        response = await client.get("/", headers={"User-Agent": "HTTPX"})
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"user_agent": "HTTPX"}
+
+
+@pytest.mark.fastapi(app=chapter3_headers_cookies_03_app)
+@pytest.mark.asyncio
+class TestHeadersCookies03:
+    @pytest.mark.parametrize("cookie", [None, "World"])
+    async def test_cookie(self, client: httpx.AsyncClient, cookie: Optional[str]):
+        cookies = []
+        if cookie:
+            cookies.append(("hello", cookie))
+        response = await client.get("/", cookies=cookies)
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"hello": cookie}
+
+
+@pytest.mark.fastapi(app=chapter3_request_object_01_app)
+@pytest.mark.asyncio
+class TestRequestObject01:
+    async def test_request(self, client: httpx.AsyncClient):
+        response = await client.get("/request")
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"path": "/request"}
