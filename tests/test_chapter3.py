@@ -68,6 +68,30 @@ from chapter3.chapter3_headers_cookies_03 import (
 from chapter3.chapter3_request_object_01 import (
     app as chapter3_request_object_01_app,
 )
+from chapter3.chapter3_response_path_parameters_01 import (
+    app as chapter3_response_path_parameters_01_app,
+)
+from chapter3.chapter3_response_path_parameters_02 import (
+    app as chapter3_response_path_parameters_02_app,
+)
+from chapter3.chapter3_response_path_parameters_03 import (
+    app as chapter3_response_path_parameters_03_app,
+)
+from chapter3.chapter3_response_parameter_01 import (
+    app as chapter3_response_parameter_01_app,
+)
+from chapter3.chapter3_response_parameter_02 import (
+    app as chapter3_response_parameter_02_app,
+)
+from chapter3.chapter3_response_parameter_03 import (
+    app as chapter3_response_parameter_03_app,
+)
+from chapter3.chapter3_raise_errors_01 import (
+    app as chapter3_raise_errors_01_app,
+)
+from chapter3.chapter3_raise_errors_02 import (
+    app as chapter3_raise_errors_02_app,
+)
 
 
 @pytest.mark.fastapi(app=chapter3_first_endpoint_01_app)
@@ -502,3 +526,148 @@ class TestRequestObject01:
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
         assert json == {"path": "/request"}
+
+
+@pytest.mark.fastapi(app=chapter3_response_path_parameters_01_app)
+@pytest.mark.asyncio
+class TestResponsePathParameters01:
+    async def test_create_post(self, client: httpx.AsyncClient):
+        payload = {"title": "Hello"}
+        response = await client.post("/posts", json=payload)
+
+        assert response.status_code == status.HTTP_201_CREATED
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_response_path_parameters_02_app)
+@pytest.mark.asyncio
+class TestResponsePathParameters02:
+    async def test_get_post(self, client: httpx.AsyncClient):
+        response = await client.get("/posts/1")
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"title": "Hello", "nb_views": 100}
+
+
+@pytest.mark.fastapi(app=chapter3_response_path_parameters_03_app)
+@pytest.mark.asyncio
+class TestResponsePathParameters03:
+    async def test_get_post(self, client: httpx.AsyncClient):
+        response = await client.get("/posts/1")
+
+        assert response.status_code == status.HTTP_200_OK
+        json = response.json()
+        assert json == {"title": "Hello"}
+
+
+@pytest.mark.fastapi(app=chapter3_response_parameter_01_app)
+@pytest.mark.asyncio
+class TestResponseParameter01:
+    async def test_get(self, client: httpx.AsyncClient):
+        response = await client.get("/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["custom-header"] == "Custom-Header-Value"
+        json = response.json()
+        assert json == {"hello": "world"}
+
+
+@pytest.mark.fastapi(app=chapter3_response_parameter_02_app)
+@pytest.mark.asyncio
+class TestResponseParameter02:
+    async def test_get(self, client: httpx.AsyncClient):
+        response = await client.get("/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.cookies["cookie-name"] == "cookie-value"
+        json = response.json()
+        assert json == {"hello": "world"}
+
+
+@pytest.mark.fastapi(app=chapter3_response_parameter_03_app)
+@pytest.mark.asyncio
+class TestResponseParameter03:
+    @pytest.mark.parametrize(
+        "id,status_code", [(1, status.HTTP_200_OK), (2, status.HTTP_201_CREATED)]
+    )
+    async def test_update_or_create(
+        self, client: httpx.AsyncClient, id: int, status_code: int
+    ):
+        payload = {"title": "New title"}
+        response = await client.put(f"/posts/{id}", json=payload)
+
+        assert response.status_code == status_code
+        json = response.json()
+        assert json == payload
+
+
+@pytest.mark.fastapi(app=chapter3_raise_errors_01_app)
+@pytest.mark.asyncio
+class TestRaiseErrors01:
+    @pytest.mark.parametrize(
+        "password,password_confirm,status_code,message",
+        [
+            (
+                "aa",
+                "bb",
+                status.HTTP_400_BAD_REQUEST,
+                {"detail": "Passwords don't match."},
+            ),
+            ("aa", "aa", status.HTTP_200_OK, {"message": "Passwords match."}),
+        ],
+    )
+    async def test_check_password(
+        self,
+        client: httpx.AsyncClient,
+        password: str,
+        password_confirm: str,
+        status_code: int,
+        message: Dict[str, str],
+    ):
+        payload = {"password": password, "password_confirm": password_confirm}
+        response = await client.post(f"/password", json=payload)
+
+        assert response.status_code == status_code
+        json = response.json()
+        assert json == message
+
+
+@pytest.mark.fastapi(app=chapter3_raise_errors_02_app)
+@pytest.mark.asyncio
+class TestRaiseErrors02:
+    @pytest.mark.parametrize(
+        "password,password_confirm,status_code,message",
+        [
+            (
+                "aa",
+                "bb",
+                status.HTTP_400_BAD_REQUEST,
+                {
+                    "detail": {
+                        "message": "Passwords don't match.",
+                        "hints": [
+                            "Check the caps lock on your keybard",
+                            "Try to make the password visible by clicking on the eye icon to check your typing",
+                        ],
+                    }
+                },
+            ),
+            ("aa", "aa", status.HTTP_200_OK, {"message": "Passwords match."}),
+        ],
+    )
+    async def test_check_password(
+        self,
+        client: httpx.AsyncClient,
+        password: str,
+        password_confirm: str,
+        status_code: int,
+        message: Dict[str, str],
+    ):
+        payload = {"password": password, "password_confirm": password_confirm}
+        response = await client.post(f"/password", json=payload)
+
+        assert response.status_code == status_code
+        json = response.json()
+        assert json == message
