@@ -7,6 +7,10 @@ class Post(BaseModel):
     nb_views: int
 
 
+class PublicPost(BaseModel):
+    title: str
+
+
 app = FastAPI()
 
 
@@ -16,6 +20,6 @@ posts = {
 }
 
 
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=PublicPost)
 async def get_post(id: int):
     return posts[id]

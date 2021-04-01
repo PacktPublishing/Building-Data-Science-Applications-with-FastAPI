@@ -77,6 +77,9 @@ from chapter3.chapter3_response_path_parameters_02 import (
 from chapter3.chapter3_response_path_parameters_03 import (
     app as chapter3_response_path_parameters_03_app,
 )
+from chapter3.chapter3_response_path_parameters_04 import (
+    app as chapter3_response_path_parameters_04_app,
+)
 from chapter3.chapter3_response_parameter_01 import (
     app as chapter3_response_parameter_01_app,
 )
@@ -543,6 +546,17 @@ class TestResponsePathParameters01:
 @pytest.mark.fastapi(app=chapter3_response_path_parameters_02_app)
 @pytest.mark.asyncio
 class TestResponsePathParameters02:
+    async def test_delete_post(self, client: httpx.AsyncClient):
+        response = await client.delete("/posts/1")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        json = response.json()
+        assert json == None
+
+
+@pytest.mark.fastapi(app=chapter3_response_path_parameters_03_app)
+@pytest.mark.asyncio
+class TestResponsePathParameters03:
     async def test_get_post(self, client: httpx.AsyncClient):
         response = await client.get("/posts/1")
 
@@ -551,9 +565,9 @@ class TestResponsePathParameters02:
         assert json == {"title": "Hello", "nb_views": 100}
 
 
-@pytest.mark.fastapi(app=chapter3_response_path_parameters_03_app)
+@pytest.mark.fastapi(app=chapter3_response_path_parameters_04_app)
 @pytest.mark.asyncio
-class TestResponsePathParameters03:
+class TestResponsePathParameters04:
     async def test_get_post(self, client: httpx.AsyncClient):
         response = await client.get("/posts/1")
 
