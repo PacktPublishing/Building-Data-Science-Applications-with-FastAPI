@@ -11,7 +11,7 @@ async def check_password(password: str = Body(...), password_confirm: str = Body
             detail={
                 "message": "Passwords don't match.",
                 "hints": [
-                    "Check the caps lock on your keybard",
+                    "Check the caps lock on your keyboard",
                     "Try to make the password visible by clicking on the eye icon to check your typing",
                 ],
             },

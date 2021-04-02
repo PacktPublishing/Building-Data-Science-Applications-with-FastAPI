@@ -95,6 +95,21 @@ from chapter3.chapter3_raise_errors_01 import (
 from chapter3.chapter3_raise_errors_02 import (
     app as chapter3_raise_errors_02_app,
 )
+from chapter3.chapter3_custom_response_01 import (
+    app as chapter3_custom_response_01_app,
+)
+from chapter3.chapter3_custom_response_02 import (
+    app as chapter3_custom_response_02_app,
+)
+from chapter3.chapter3_custom_response_03 import (
+    app as chapter3_custom_response_03_app,
+)
+from chapter3.chapter3_custom_response_04 import (
+    app as chapter3_custom_response_04_app,
+)
+from chapter3.chapter3_custom_response_05 import (
+    app as chapter3_custom_response_05_app,
+)
 
 
 @pytest.mark.fastapi(app=chapter3_first_endpoint_01_app)
@@ -662,7 +677,7 @@ class TestRaiseErrors02:
                     "detail": {
                         "message": "Passwords don't match.",
                         "hints": [
-                            "Check the caps lock on your keybard",
+                            "Check the caps lock on your keyboard",
                             "Try to make the password visible by clicking on the eye icon to check your typing",
                         ],
                     }
@@ -685,3 +700,66 @@ class TestRaiseErrors02:
         assert response.status_code == status_code
         json = response.json()
         assert json == message
+
+
+@pytest.mark.fastapi(app=chapter3_custom_response_01_app)
+@pytest.mark.asyncio
+class TestCustomResponse01:
+    async def test_html(self, client: httpx.AsyncClient):
+        response = await client.get("/html")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-type"] == "text/html; charset=utf-8"
+        text = response.text
+        assert text.strip().startswith("<html>")
+
+    async def test_text(self, client: httpx.AsyncClient):
+        response = await client.get("/text")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-type"] == "text/plain; charset=utf-8"
+        text = response.text
+        assert text == "Hello world!"
+
+
+@pytest.mark.fastapi(app=chapter3_custom_response_02_app)
+@pytest.mark.asyncio
+class TestCustomResponse02:
+    async def test_redirect(self, client: httpx.AsyncClient):
+        response = await client.get("/redirect", allow_redirects=False)
+
+        assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+        assert response.headers["location"] == "/new-url"
+
+
+@pytest.mark.fastapi(app=chapter3_custom_response_03_app)
+@pytest.mark.asyncio
+class TestCustomResponse03:
+    async def test_redirect(self, client: httpx.AsyncClient):
+        response = await client.get("/redirect", allow_redirects=False)
+
+        assert response.status_code == status.HTTP_301_MOVED_PERMANENTLY
+        assert response.headers["location"] == "/new-url"
+
+
+@pytest.mark.fastapi(app=chapter3_custom_response_04_app)
+@pytest.mark.asyncio
+class TestCustomResponse04:
+    async def test_cat(self, client: httpx.AsyncClient):
+        response = await client.get("/cat")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-type"] == "image/jpeg"
+        assert response.headers["content-length"] == "71457"
+
+
+@pytest.mark.fastapi(app=chapter3_custom_response_05_app)
+@pytest.mark.asyncio
+class TestCustomResponse05:
+    async def test_xml(self, client: httpx.AsyncClient):
+        response = await client.get("/xml")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-type"] == "application/xml"
+        text = response.text
+        assert text.strip().startswith("<?xml")

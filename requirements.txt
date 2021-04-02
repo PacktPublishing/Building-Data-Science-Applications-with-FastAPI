@@ -1,3 +1,4 @@
+aiofiles==0.6.0
 fastapi==0.63.0
 python-multipart==0.0.5
 uvicorn[standard]==0.13.4
