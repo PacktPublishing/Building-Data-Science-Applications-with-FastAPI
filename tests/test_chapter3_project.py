@@ -7,6 +7,7 @@ from chapter3_project.models.user import User
 from chapter3_project.models.post import Post
 from chapter3_project.db import db
 
+
 @pytest.fixture(autouse=True)
 def fill_db():
     db.users = {
