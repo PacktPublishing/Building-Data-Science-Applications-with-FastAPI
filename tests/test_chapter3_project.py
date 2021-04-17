@@ -17,8 +17,8 @@ def fill_db():
     }
     db.posts = {
         1: Post(id=1, user=1, title="Post 1"),
-        2: Post(id=1, user=2, title="Post 2"),
-        3: Post(id=1, user=3, title="Post 3"),
+        2: Post(id=2, user=2, title="Post 2"),
+        3: Post(id=3, user=3, title="Post 3"),
     }
 
 
