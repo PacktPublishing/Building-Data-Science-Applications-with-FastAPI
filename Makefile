@@ -4,5 +4,7 @@ lint:
 typecheck:
 	mypy --exclude venv/ .
 
-test: lint typecheck
-	pytest --cov=chapter2 --cov=chapter3 --cov-report=term-missing
+pytest:
+	pytest --cov=chapter2 --cov=chapter3 --cov=chapter4 --cov=chapter5 --cov-report=term-missing
+
+test: lint typecheck pytest
