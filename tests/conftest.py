@@ -32,6 +32,13 @@ async def client(
     if not isinstance(app, FastAPI):
         raise ValueError("client fixture: app must be a FastAPI instance")
 
+    dependency_overrides = marker.kwargs.get("dependency_overrides")
+    if dependency_overrides:
+        if not isinstance(dependency_overrides, dict):
+            raise ValueError("client fixture: dependency_overrides must be a dictionary")
+        app.dependency_overrides = dependency_overrides
+
     async with LifespanManager(app):
+        print("Hey")
         async with httpx.AsyncClient(app=app, base_url="http://app.io") as test_client:
             yield test_client
