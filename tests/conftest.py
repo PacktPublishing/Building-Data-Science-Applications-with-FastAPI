@@ -1,6 +1,5 @@
 from typing import Callable, AsyncGenerator
 import asyncio
-from _pytest import mark
 
 import httpx
 import pytest
@@ -35,7 +34,9 @@ async def client(
     dependency_overrides = marker.kwargs.get("dependency_overrides")
     if dependency_overrides:
         if not isinstance(dependency_overrides, dict):
-            raise ValueError("client fixture: dependency_overrides must be a dictionary")
+            raise ValueError(
+                "client fixture: dependency_overrides must be a dictionary"
+            )
         app.dependency_overrides = dependency_overrides
 
     async with LifespanManager(app):

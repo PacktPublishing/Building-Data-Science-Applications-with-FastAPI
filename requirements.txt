@@ -1,7 +1,9 @@
 aiofiles==0.6.0
+alembic==1.5.8
 fastapi==0.63.0
 pydantic[email]==1.8.1
 python-multipart==0.0.5
+sqlalchemy-stubs==0.4
 uvicorn[standard]==0.13.4
 
 asgi-lifespan
