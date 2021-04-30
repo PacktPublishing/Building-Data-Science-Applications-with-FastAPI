@@ -39,7 +39,15 @@ async def client(
             )
         app.dependency_overrides = dependency_overrides
 
-    async with LifespanManager(app):
-        print("Hey")
-        async with httpx.AsyncClient(app=app, base_url="http://app.io") as test_client:
+    run_lifespan_events = marker.kwargs.get("run_lifespan_events", True)
+    if not isinstance(run_lifespan_events, bool):
+        raise ValueError("client fixture: run_lifespan_events must be a bool")
+
+    test_client_generator = httpx.AsyncClient(app=app, base_url="http://app.io")
+    if run_lifespan_events:
+        async with LifespanManager(app):
+            async with test_client_generator as test_client:
+                yield test_client
+    else:
+        async with test_client_generator as test_client:
             yield test_client
