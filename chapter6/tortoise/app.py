@@ -1,8 +1,7 @@
 from typing import List, Tuple
 
-from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi import Depends, FastAPI, Query, status
 from tortoise.contrib.fastapi import register_tortoise
-from tortoise.exceptions import DoesNotExist
 
 from chapter6.tortoise.models import (
     PostDB,
@@ -23,10 +22,7 @@ async def pagination(
 
 
 async def get_post_or_404(id: int) -> PostTortoise:
-    try:
-        return await PostTortoise.get(id=id)
-    except DoesNotExist:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return await PostTortoise.get(id=id)
 
 
 @app.get("/posts")
@@ -66,10 +62,19 @@ async def delete_post(post: PostTortoise = Depends(get_post_or_404)):
     await post.delete()
 
 
+TORTOISE_ORM = {
+    "connections": {"default": "sqlite://chapter6_tortoise.db"},
+    "apps": {
+        "models": {
+            "models": ["chapter6.tortoise.models", "aerich.models"],
+            "default_connection": "default",
+        },
+    },
+}
+
 register_tortoise(
     app,
-    db_url="sqlite://chapter6_tortoise.db",
-    modules={"models": ["chapter6.tortoise.models"]},
+    config=TORTOISE_ORM,
     generate_schemas=True,
     add_exception_handlers=True,
 )
