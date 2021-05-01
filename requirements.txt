@@ -4,6 +4,7 @@ aiosqlite==0.16.1
 alembic==1.5.8
 databases[sqlite]==0.4.3
 fastapi==0.63.0
+motor==2.4.0
 pydantic[email]==1.8.1
 python-multipart==0.0.5
 sqlalchemy-stubs==0.4

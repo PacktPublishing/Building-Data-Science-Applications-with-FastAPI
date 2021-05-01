@@ -8,6 +8,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo
+        ports:
+        - 27017:27017
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
@@ -27,3 +33,5 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+      env:
+        MONGODB_CONNECTION_STRING: "mongodb://mongodb:27017"

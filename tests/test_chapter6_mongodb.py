@@ -3,43 +3,44 @@ from typing import Any, Dict, Optional
 
 import httpx
 import pytest
-import sqlalchemy
-from databases import Database
+from motor.motor_asyncio import AsyncIOMotorClient
+from bson import ObjectId
 from fastapi import status
 
-from chapter6.sqlalchemy.app import app
-from chapter6.sqlalchemy.models import PostDB, metadata, posts
-from chapter6.sqlalchemy.database import get_database
+from chapter6.mongodb.app import app, get_database
+from chapter6.mongodb.models import PostDB
 
 
-DATABASE_FILE_PATH = "chapter6_sqlalchemy.test.db"
-DATABASE_URL = f"sqlite:///{DATABASE_FILE_PATH}"
-database_test = Database(DATABASE_URL)
-sqlalchemy_engine = sqlalchemy.create_engine(DATABASE_URL)
+motor_client = AsyncIOMotorClient(
+    os.getenv("MONGODB_CONNECTION_STRING", "mongodb://localhost:27017")
+)
+database_test = motor_client.chapter6_mongo_test
+initial_posts = [
+    PostDB(title="Post 1", content="Content 1"),
+    PostDB(title="Post 2", content="Content 2"),
+    PostDB(title="Post 3", content="Content 3"),
+]
+existing_id = str(initial_posts[0].id)
+not_existing_id = str(ObjectId())
+invalid_id = "aaa"
 
 
 @pytest.fixture(autouse=True, scope="module")
 async def initialize_database():
-    metadata.create_all(sqlalchemy_engine)
-
-    initial_posts = [
-        PostDB(id=1, title="Post 1", content="Content 1"),
-        PostDB(id=2, title="Post 2", content="Content 2"),
-        PostDB(id=3, title="Post 3", content="Content 3"),
-    ]
-    insert_query = posts.insert().values([post.dict() for post in initial_posts])
-    await database_test.execute(insert_query)
+    await database_test["posts"].insert_many(
+        [post.dict(by_alias=True) for post in initial_posts]
+    )
 
     yield
 
-    os.remove(DATABASE_FILE_PATH)
+    await motor_client.drop_database("chapter6_mongo_test")
 
 
 @pytest.mark.fastapi(
     app=app, dependency_overrides={get_database: lambda: database_test}
 )
 @pytest.mark.asyncio
-class TestChapter6SQLAlchemy:
+class TestChapter6MongoDB:
     @pytest.mark.parametrize(
         "skip,limit,nb_results", [(None, None, 3), (0, 1, 1), (10, 1, 0)]
     )
@@ -60,17 +61,24 @@ class TestChapter6SQLAlchemy:
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
         assert len(json) == nb_results
+        for post in json:
+            assert "_id" in post
 
     @pytest.mark.parametrize(
-        "id,status_code", [(1, status.HTTP_200_OK), (10, status.HTTP_404_NOT_FOUND)]
+        "id,status_code",
+        [
+            (existing_id, status.HTTP_200_OK),
+            (not_existing_id, status.HTTP_404_NOT_FOUND),
+            (invalid_id, status.HTTP_404_NOT_FOUND),
+        ],
     )
-    async def test_get_post(self, client: httpx.AsyncClient, id: int, status_code: int):
+    async def test_get_post(self, client: httpx.AsyncClient, id: str, status_code: int):
         response = await client.get(f"/posts/{id}")
 
         assert response.status_code == status_code
         if status_code == status.HTTP_200_OK:
             json = response.json()
-            assert json["id"] == id
+            assert json["_id"] == id
 
     @pytest.mark.parametrize(
         "payload,status_code",
@@ -87,19 +95,20 @@ class TestChapter6SQLAlchemy:
         assert response.status_code == status_code
         if status_code == status.HTTP_201_CREATED:
             json = response.json()
-            assert "id" in json
+            assert "_id" in json
 
     @pytest.mark.parametrize(
         "id,payload,status_code",
         [
-            (1, {"title": "Post 1 Updated"}, status.HTTP_200_OK),
-            (10, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND),
+            (existing_id, {"title": "Post 1 Updated"}, status.HTTP_200_OK),
+            (not_existing_id, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND),
+            (invalid_id, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND),
         ],
     )
     async def test_update_post(
         self,
         client: httpx.AsyncClient,
-        id: int,
+        id: str,
         payload: Dict[str, Any],
         status_code: int,
     ):
@@ -113,10 +122,14 @@ class TestChapter6SQLAlchemy:
 
     @pytest.mark.parametrize(
         "id,status_code",
-        [(1, status.HTTP_204_NO_CONTENT), (10, status.HTTP_404_NOT_FOUND)],
+        [
+            (existing_id, status.HTTP_204_NO_CONTENT),
+            (not_existing_id, status.HTTP_404_NOT_FOUND),
+            (invalid_id, status.HTTP_404_NOT_FOUND),
+        ],
     )
     async def test_delete_post(
-        self, client: httpx.AsyncClient, id: int, status_code: int
+        self, client: httpx.AsyncClient, id: str, status_code: int
     ):
         response = await client.delete(f"/posts/{id}")
 
