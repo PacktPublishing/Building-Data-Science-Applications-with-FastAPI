@@ -12,7 +12,7 @@ from chapter6.mongodb.models import (
 
 app = FastAPI()
 motor_client = AsyncIOMotorClient("mongodb://localhost:27017")
-database = motor_client.chapter6_mongo
+database = motor_client["chapter6_mongo"]
 
 
 def get_database() -> AsyncIOMotorDatabase:
@@ -27,7 +27,7 @@ async def pagination(
     return (skip, capped_limit)
 
 
-async def get_bson_id(id: str) -> ObjectId:
+async def get_object_id(id: str) -> ObjectId:
     try:
         return ObjectId(id)
     except (errors.InvalidId, TypeError):
@@ -35,7 +35,7 @@ async def get_bson_id(id: str) -> ObjectId:
 
 
 async def get_post_or_404(
-    id: ObjectId = Depends(get_bson_id),
+    id: ObjectId = Depends(get_object_id),
     database: AsyncIOMotorDatabase = Depends(get_database),
 ) -> PostDB:
     raw_post = await database["posts"].find_one({"_id": id})
