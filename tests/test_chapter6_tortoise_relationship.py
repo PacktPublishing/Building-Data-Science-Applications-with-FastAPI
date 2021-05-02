@@ -7,7 +7,12 @@ from fastapi import status
 from tortoise import Tortoise
 
 from chapter6.tortoise_relationship.app import app
-from chapter6.tortoise_relationship.models import CommentDB, CommentTortoise, PostDB, PostTortoise
+from chapter6.tortoise_relationship.models import (
+    CommentDB,
+    CommentTortoise,
+    PostDB,
+    PostTortoise,
+)
 
 
 DATABASE_FILE_PATH = "chapter6_tortoise_relationship.test.db"
@@ -17,7 +22,8 @@ DATABASE_URL = f"sqlite://{DATABASE_FILE_PATH}"
 @pytest.fixture(autouse=True, scope="module")
 async def initialize_database():
     await Tortoise.init(
-        db_url=DATABASE_URL, modules={"models": ["chapter6.tortoise_relationship.models"]}
+        db_url=DATABASE_URL,
+        modules={"models": ["chapter6.tortoise_relationship.models"]},
     )
     await Tortoise.generate_schemas()
 
@@ -115,7 +121,7 @@ class TestChapter6TortoiseRelationship:
         id: int,
         payload: Dict[str, Any],
         status_code: int,
-        nb_comments: int
+        nb_comments: int,
     ):
         response = await client.patch(f"/posts/{id}", json=payload)
 

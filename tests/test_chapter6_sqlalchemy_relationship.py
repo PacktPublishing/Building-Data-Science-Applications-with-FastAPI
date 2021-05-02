@@ -123,7 +123,7 @@ class TestChapter6SQLAlchemyRelationship:
         id: int,
         payload: Dict[str, Any],
         status_code: int,
-        nb_comments: int
+        nb_comments: int,
     ):
         response = await client.patch(f"/posts/{id}", json=payload)
 

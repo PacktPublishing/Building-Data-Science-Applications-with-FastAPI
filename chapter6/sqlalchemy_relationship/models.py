@@ -58,7 +58,7 @@ comments = sqlalchemy.Table(
     "comments",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column('post_id', sqlalchemy.ForeignKey('posts.id'), nullable=False),
+    sqlalchemy.Column("post_id", sqlalchemy.ForeignKey("posts.id"), nullable=False),
     sqlalchemy.Column("publication_date", sqlalchemy.DateTime(), nullable=False),
     sqlalchemy.Column("content", sqlalchemy.Text(), nullable=False),
 )
