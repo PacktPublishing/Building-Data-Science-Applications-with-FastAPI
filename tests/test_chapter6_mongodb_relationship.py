@@ -113,7 +113,12 @@ class TestChapter6MongoDBRelationship:
         "id,payload,status_code,nb_comments",
         [
             (existing_id, {"title": "Post 1 Updated"}, status.HTTP_200_OK, 3),
-            (not_existing_id, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND, 0),
+            (
+                not_existing_id,
+                {"title": "Post 10 Updated"},
+                status.HTTP_404_NOT_FOUND,
+                0,
+            ),
             (invalid_id, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND, 0),
         ],
     )
@@ -152,13 +157,21 @@ class TestChapter6MongoDBRelationship:
     @pytest.mark.parametrize(
         "post_id,payload,status_code",
         [
-            (str(initial_posts[1].id), {"content": "New comment"}, status.HTTP_201_CREATED),
+            (
+                str(initial_posts[1].id),
+                {"content": "New comment"},
+                status.HTTP_201_CREATED,
+            ),
             (not_existing_id, {"content": "New comment"}, status.HTTP_404_NOT_FOUND),
             (str(initial_posts[1].id), {}, status.HTTP_422_UNPROCESSABLE_ENTITY),
         ],
     )
     async def test_create_comment(
-        self, client: httpx.AsyncClient, post_id: str, payload: Dict[str, Any], status_code: int
+        self,
+        client: httpx.AsyncClient,
+        post_id: str,
+        payload: Dict[str, Any],
+        status_code: int,
     ):
         response = await client.post(f"/posts/{post_id}/comments", json=payload)
 
