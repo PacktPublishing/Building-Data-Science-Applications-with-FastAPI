@@ -66,7 +66,7 @@ TORTOISE_ORM = {
     "connections": {"default": "sqlite://chapter6_tortoise.db"},
     "apps": {
         "models": {
-            "models": ["chapter6.tortoise.models", "aerich.models"],
+            "models": ["chapter6.tortoise.models"],
             "default_connection": "default",
         },
     },
