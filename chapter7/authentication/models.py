@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from chapter7_project.password import generate_token
+from chapter7.authentication.password import generate_token
 from pydantic import BaseModel, EmailStr, Field
 from tortoise.models import Model
 from tortoise import fields

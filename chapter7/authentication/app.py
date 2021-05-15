@@ -5,15 +5,15 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
-from chapter7_project.authentication import authenticate, create_access_token
-from chapter7_project.models import (
+from chapter7.authentication.authentication import authenticate, create_access_token
+from chapter7.authentication.models import (
     AccessTokenTortoise,
     User,
     UserCreate,
     UserDB,
     UserTortoise,
 )
-from chapter7_project.password import get_password_hash
+from chapter7.authentication.password import get_password_hash
 
 app = FastAPI()
 
@@ -68,10 +68,10 @@ async def protected_route(user: UserDB = Depends(get_current_user)):
 
 
 TORTOISE_ORM = {
-    "connections": {"default": "sqlite://chapter7_project.db"},
+    "connections": {"default": "sqlite://chapter7_authentication.db"},
     "apps": {
         "models": {
-            "models": ["chapter7_project.models"],
+            "models": ["chapter7.authentication.models"],
             "default_connection": "default",
         },
     },

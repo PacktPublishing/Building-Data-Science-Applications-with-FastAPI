@@ -2,13 +2,13 @@ from typing import Optional
 
 from tortoise.exceptions import DoesNotExist
 
-from chapter7_project.models import (
+from chapter7.authentication.models import (
     AccessToken,
     AccessTokenTortoise,
     UserDB,
     UserTortoise,
 )
-from chapter7_project.password import verify_password
+from chapter7.authentication.password import verify_password
 
 
 async def authenticate(email: str, password: str) -> Optional[UserDB]:

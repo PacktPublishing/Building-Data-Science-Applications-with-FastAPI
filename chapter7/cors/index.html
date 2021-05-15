@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+  <title>Chapter 7 CORS Example</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="my-3">Chapter 7 CORS Example</h1>
+    <form>
+      <div class="mb-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="json-content-type">
+          <label class="form-check-label" for="json-content-type">Enable JSON content-type</label>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button type="button" id="launch-get" class="btn btn-success">Launch GET request</button>
+        <button type="button" id="launch-post" class="btn btn-danger">Launch POST request</button>
+      </div>
+      <div class="mb-3">
+        <label for="result" class="form-label">Result</label>
+        <textarea class="form-control" id="result" rows="3"></textarea>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const host = "http://localhost:8000";
+
+    const jsonContentTypeEnabled = () => {
+      return document.getElementById("json-content-type").checked;
+    }
+
+    const makeRequest = (path, method, body, enableJSONContentType) => {
+      const headers = new Headers();
+      if (enableJSONContentType) {
+        headers.append("content-type", "application/json");
+      }
+      return fetch(`${host}${path}`, { method, headers, body })
+    }
+
+    const handleResponse = (response) => {
+      const result = document.getElementById("result");
+      response
+        .then((response) => {
+          response.text().then((text) => result.innerHTML = text);
+        })
+        .catch((error) => {
+          result.innerHTML = error.message;
+        })
+        ;
+    };
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      document.getElementById("launch-get").addEventListener("click", () => {
+        const request = makeRequest("/", "GET", null, jsonContentTypeEnabled());
+        handleResponse(request);
+      });
+
+      document.getElementById("launch-post").addEventListener("click", () => {
+        const request = makeRequest("/", "POST", JSON.stringify({ "hello": "world" }), jsonContentTypeEnabled());
+        handleResponse(request);
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -6,16 +6,16 @@ import pytest
 from fastapi import status
 from tortoise import Tortoise
 
-from chapter7_project.app import app
-from chapter7_project.models import (
+from chapter7.authentication.app import app
+from chapter7.authentication.models import (
     AccessToken,
     AccessTokenTortoise,
     UserDB,
     UserTortoise,
 )
-from chapter7_project.password import get_password_hash
+from chapter7.authentication.password import get_password_hash
 
-DATABASE_FILE_PATH = "chapter7_project.test.db"
+DATABASE_FILE_PATH = "chapter7_authentication.test.db"
 DATABASE_URL = f"sqlite://{DATABASE_FILE_PATH}"
 
 
@@ -23,7 +23,7 @@ DATABASE_URL = f"sqlite://{DATABASE_FILE_PATH}"
 async def initialize_database():
     await Tortoise.init(
         db_url=DATABASE_URL,
-        modules={"models": ["chapter7_project.models"]},
+        modules={"models": ["chapter7.authentication.models"]},
     )
     await Tortoise.generate_schemas()
 
