@@ -1,12 +1,10 @@
 from fastapi import FastAPI, Request
-from starlette.responses import Response
 
 app = FastAPI()
 
 
 @app.get("/")
-async def get(response: Response):
-    response.set_cookie("hello", "world")
+async def get():
     return {"detail": "GET response"}
 
 
