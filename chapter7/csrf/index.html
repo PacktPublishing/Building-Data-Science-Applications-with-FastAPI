@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+  <title>Chapter 7 CSRF Example</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="my-3">Chapter 7 CSRF Example</h1>
+
+    <div class="mb-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="send-csrf" checked>
+        <label class="form-check-label" for="send-csrf">Send CSRF token</label>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+
+      <div class="col col-12 col-md-6">
+        <div class="card mb-5 mb-md-0">
+          <div class="card-body">
+            <form id="register">
+              <h5 class="card-title">Register</h5>
+              <div id="register-alert" class="alert d-none" role="alert"></div>
+              <div class="mb-3">
+                <label for="register-email" class="form-label">E-mail address</label>
+                <input type="email" class="form-control" id="register-email" required>
+              </div>
+              <div class="mb-3">
+                <label for="register-pasword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="register-password" required>
+              </div>
+              <div class="mb-3">
+                <input type="submit" class="btn btn-warning" value="Register">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-12 col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <form id="login">
+              <h5 class="card-title">Login</h5>
+              <div id="login-alert" class="alert d-none" role="alert"></div>
+              <div class="mb-3">
+                <label for="login-email" class="form-label">E-mail address</label>
+                <input type="email" class="form-control" id="login-email" required>
+              </div>
+              <div class="mb-3">
+                <label for="login-pasword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="login-password" required>
+              </div>
+              <div class="mb-3">
+                <input type="submit" class="btn btn-warning" value="Login">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row mb-5">
+
+      <div class="col col-12 col-md-6">
+        <div class="card mb-5 mb-md-0">
+          <div class="card-body">
+            <form id="get-me">
+              <h5 class="card-title">Get logged user</h5>
+              <div id="me-alert" class="alert d-none" role="alert"></div>
+              <div class="mb-3">
+                <input type="submit" class="btn btn-success" value="Get logged user">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-12 col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <form id="update">
+              <h5 class="card-title">Update e-mail</h5>
+              <div id="update-alert" class="alert d-none" role="alert"></div>
+              <div class="mb-3">
+                <label for="update-email" class="form-label">E-mail address</label>
+                <input type="email" class="form-control" id="update-email" required>
+              </div>
+              <div class="mb-3">
+                <input type="submit" class="btn btn-warning" value="Register">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const host = 'http://localhost:8000';
+
+    const getCSRFCookieValue = () => {
+      const matchingCookie = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('csrftoken='));
+      if (matchingCookie) {
+        return matchingCookie.trim().split('=')[1];
+      }
+    }
+
+    const makeRequest = (path, method, body, contentType) => {
+      const headers = new Headers();
+      if (contentType) {
+        headers.append('content-type', contentType);
+      }
+      const sendCSRFToken = document.getElementById('send-csrf').checked;
+      if (sendCSRFToken) {
+        const csrfToken = getCSRFCookieValue();
+        if (csrfToken) {
+          headers.append('x-csrftoken', getCSRFCookieValue());
+        }
+      }
+      return fetch(`${host}${path}`, { method, headers, body, credentials: 'include' })
+    }
+
+    const handleResponse = (response, ) => {
+      const result = document.getElementById('result');
+      response
+        .then((response) => {
+          response.text().then((text) => result.innerHTML = text);
+        })
+        .catch((error) => {
+          result.innerHTML = error.message;
+        })
+        ;
+    };
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      makeRequest('/csrf', 'GET');
+
+      document.getElementById('register').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const body = JSON.stringify({ email, password });
+
+        const alert = document.getElementById('register-alert');
+        makeRequest('/register', 'POST', body, 'application/json')
+          .then((response) => {
+            response.text().then((text) => {
+              const success = response.status < 400;
+              alert.innerText = text;
+              alert.setAttribute('class', `alert alert-${success ? 'success' : 'danger'}`);
+            });
+          })
+          .catch((error) => {
+            alert.innerText = error.message;
+            alert.setAttribute('class', 'alert alert-danger');
+          })
+        ;
+      });
+
+      document.getElementById('login').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const body = new FormData();
+        body.set("email", email);
+        body.set("password", password);
+
+        const alert = document.getElementById('login-alert');
+        makeRequest('/login', 'POST', body)
+          .then((response) => {
+            response.text().then((text) => {
+              const success = response.status < 400;
+              alert.innerText = text;
+              alert.setAttribute('class', `alert alert-${success ? 'success' : 'danger'}`);
+            });
+          })
+          .catch((error) => {
+            alert.innerText = error.message;
+            alert.setAttribute('class', 'alert alert-danger');
+          })
+        ;
+      });
+
+      document.getElementById('get-me').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const alert = document.getElementById('me-alert');
+        makeRequest('/me', 'GET')
+          .then((response) => {
+            response.text().then((text) => {
+              const success = response.status < 400;
+              alert.innerText = text;
+              alert.setAttribute('class', `alert alert-${success ? 'success' : 'danger'}`);
+            });
+          })
+          .catch((error) => {
+            alert.innerText = error.message;
+            alert.setAttribute('class', 'alert alert-danger');
+          })
+        ;
+      });
+
+      document.getElementById('update').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('update-email').value;
+        const body = JSON.stringify({ email });
+
+        const alert = document.getElementById('update-alert');
+        makeRequest('/me', 'POST', body, 'application/json')
+          .then((response) => {
+            response.text().then((text) => {
+              const success = response.status < 400;
+              alert.innerText = text;
+              alert.setAttribute('class', `alert alert-${success ? 'success' : 'danger'}`);
+            });
+          })
+          .catch((error) => {
+            alert.innerText = error.message;
+            alert.setAttribute('class', 'alert alert-danger');
+          })
+        ;
+      });
+    });
+  </script>
+</body>
+
+</html>
