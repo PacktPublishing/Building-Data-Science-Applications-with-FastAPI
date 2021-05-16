@@ -1,7 +1,8 @@
-from datetime import datetime
+from typing import cast
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from tortoise import timezone
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
@@ -20,12 +21,12 @@ app = FastAPI()
 
 async def get_current_user(
     token: str = Depends(OAuth2PasswordBearer(tokenUrl="/token")),
-) -> UserDB:
+) -> UserTortoise:
     try:
         access_token: AccessTokenTortoise = await AccessTokenTortoise.get(
-            access_token=token, expiration_date__gte=datetime.utcnow()
+            access_token=token, expiration_date__gte=timezone.now()
         ).prefetch_related("user")
-        return UserDB.from_orm(access_token.user)
+        return cast(UserTortoise, access_token.user)
     except DoesNotExist:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
@@ -64,7 +65,7 @@ async def create_token(
 
 @app.get("/protected-route", response_model=User)
 async def protected_route(user: UserDB = Depends(get_current_user)):
-    return user
+    return User.from_orm(user)
 
 
 TORTOISE_ORM = {
@@ -75,6 +76,7 @@ TORTOISE_ORM = {
             "default_connection": "default",
         },
     },
+    "use_tz": True,
 }
 
 register_tortoise(
