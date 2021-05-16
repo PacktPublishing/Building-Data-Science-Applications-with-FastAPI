@@ -1,4 +1,5 @@
-from passlib import pwd
+import secrets
+
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -13,4 +14,4 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def generate_token() -> str:
-    return pwd.genword(entropy=128)
+    return secrets.token_urlsafe(32)
