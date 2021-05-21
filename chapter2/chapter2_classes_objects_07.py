@@ -10,4 +10,4 @@ class Child(A):
 
 
 c = Child()
-assert c.f() == "Child A"
+print(c.f())  # "Child A"

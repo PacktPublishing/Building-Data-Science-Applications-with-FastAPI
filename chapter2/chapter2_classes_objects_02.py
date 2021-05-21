@@ -7,6 +7,6 @@ class Greetings:
 
 
 c = Greetings("Alan")
-assert c.default_name == "Alan"
-assert c.greet() == "Hello, Alan"
-assert c.greet("John") == "Hello, John"
+print(c.default_name)  # "Alan"
+print(c.greet())  # "Hello, Alan"
+print(c.greet("John"))  # "Hello, John"

@@ -7,8 +7,8 @@ class Counter:
 
 
 c = Counter()
-assert c.counter == 0
+print(c.counter)  # 0
 c()
-assert c.counter == 1
+print(c.counter)  # 1
 c(10)
-assert c.counter == 11
+print(c.counter)  # 11

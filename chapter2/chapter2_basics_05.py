@@ -1,8 +1,7 @@
 def retrieve_page(page):
     if page > 3:
         return {"next_page": None, "items": []}
-    else:
-        return {"next_page": page + 1, "items": ["A", "B", "C"]}
+    return {"next_page": page + 1, "items": ["A", "B", "C"]}
 
 
 items = []
@@ -13,4 +12,4 @@ while page is not None:
     page = page_result["next_page"]
 
 
-assert items == ["A", "B", "C", "A", "B", "C", "A", "B", "C"]
+print(items)  # ["A", "B", "C", "A", "B", "C", "A", "B", "C"]

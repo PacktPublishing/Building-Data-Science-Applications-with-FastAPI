@@ -13,5 +13,5 @@ class Child(A, B):
 
 
 c = Child()
-assert c.f() == "A"
-assert c.g() == "B"
+print(c.f())  # "A"
+print(c.g())  # "B"

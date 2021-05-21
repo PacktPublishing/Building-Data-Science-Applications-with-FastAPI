@@ -5,4 +5,4 @@ def even_numbers(max):
 
 
 even = list(even_numbers(10))
-assert even == [2, 4, 6, 8, 10]
+print(even)  # [2, 4, 6, 8, 10]

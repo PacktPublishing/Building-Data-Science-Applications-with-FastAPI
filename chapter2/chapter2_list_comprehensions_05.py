@@ -3,7 +3,5 @@ even_generator = (number for number in numbers if number % 2 == 0)
 even = list(even_generator)
 even_bis = list(even_generator)
 
-assert even == [2, 4, 6, 8, 10]
-assert even_bis == []
-print(even)
-print(even_bis)
+print(even)  # [2, 4, 6, 8, 10]
+print(even_bis)  # []

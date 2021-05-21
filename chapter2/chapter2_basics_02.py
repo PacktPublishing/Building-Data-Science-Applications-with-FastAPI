@@ -5,5 +5,4 @@ for number in numbers:
     if number % 2 == 0:
         even.append(number)
 
-assert even == [2, 4, 6, 8, 10]
-print(even)
+print(even)  # [2, 4, 6, 8, 10]

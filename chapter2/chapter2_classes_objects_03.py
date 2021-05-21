@@ -11,6 +11,6 @@ class Temperature:
 
 
 t = Temperature(25, "C")
-assert repr(t) == "Temperature(25, 'C')"
-assert str(t) == "Temperature is 25 °C"
+print(repr(t))  # "Temperature(25, 'C')"
+print(str(t))  # "Temperature is 25 °C"
 print(t)

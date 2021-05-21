@@ -4,4 +4,4 @@ class Greetings:
 
 
 c = Greetings()
-assert c.greet("John") == "Hello, John"
+print(c.greet("John"))  # "Hello, John"

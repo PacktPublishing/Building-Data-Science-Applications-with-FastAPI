@@ -8,4 +8,4 @@ class Child(A):
 
 
 c = Child()
-assert c.f() == "A"
+print(c.f())  # "A"

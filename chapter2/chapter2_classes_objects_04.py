@@ -23,5 +23,5 @@ class Temperature:
 tc = Temperature(25, "C")
 tf = Temperature(77, "F")
 tf2 = Temperature(100, "F")
-assert tc == tf
-assert tc < tf2
+print(tc == tf)  # True
+print(tc < tf2)  # True

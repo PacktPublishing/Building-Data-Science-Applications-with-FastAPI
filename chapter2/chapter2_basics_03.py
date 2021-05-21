@@ -5,9 +5,9 @@ def euclidean_division(dividend, divisor):
 
 
 t = euclidean_division(3, 2)
-assert t[0] == 1
-assert t[1] == 1
+print(t[0])  # 1
+print(t[1])  # 1
 
 q, r = euclidean_division(42, 4)
-assert q == 10
-assert r == 2
+print(q)  # 10
+print(r)  # 2
