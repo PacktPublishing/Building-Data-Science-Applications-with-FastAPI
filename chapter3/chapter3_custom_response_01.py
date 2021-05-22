@@ -5,7 +5,7 @@ app = FastAPI()
 
 
 @app.get("/html", response_class=HTMLResponse)
-async def html():
+async def get_html():
     return """
         <html>
             <head>

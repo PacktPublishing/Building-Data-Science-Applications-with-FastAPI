@@ -6,5 +6,5 @@ app = FastAPI()
 
 
 @app.get("/")
-async def cookie(hello: Optional[str] = Cookie(None)):
+async def get_cookie(hello: Optional[str] = Cookie(None)):
     return {"hello": hello}

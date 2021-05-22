@@ -4,5 +4,5 @@ app = FastAPI()
 
 
 @app.get("/")
-async def header(user_agent: str = Header(...)):
+async def get_header(user_agent: str = Header(...)):
     return {"user_agent": user_agent}
