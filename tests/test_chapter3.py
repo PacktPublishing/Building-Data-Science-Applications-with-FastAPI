@@ -434,12 +434,12 @@ class TestFormData01:
 @pytest.mark.asyncio
 class TestFileUploads01:
     async def test_get_missing_file(self, client: httpx.AsyncClient):
-        response = await client.post("/upload")
+        response = await client.post("/files")
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_get_valid_file(self, client: httpx.AsyncClient):
-        response = await client.post("/upload", files={"file": b"Hello"})
+        response = await client.post("/files", files={"file": b"Hello"})
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
@@ -450,12 +450,12 @@ class TestFileUploads01:
 @pytest.mark.asyncio
 class TestFileUploads02:
     async def test_get_missing_file(self, client: httpx.AsyncClient):
-        response = await client.post("/upload")
+        response = await client.post("/files")
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_get_valid_file(self, client: httpx.AsyncClient):
-        response = await client.post("/upload", files={"file": ("hello.txt", b"Hello")})
+        response = await client.post("/files", files={"file": ("hello.txt", b"Hello")})
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
@@ -466,13 +466,13 @@ class TestFileUploads02:
 @pytest.mark.asyncio
 class TestFileUploads03:
     async def test_get_missing_files(self, client: httpx.AsyncClient):
-        response = await client.post("/upload")
+        response = await client.post("/files")
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_get_valid_files(self, client: httpx.AsyncClient):
         response = await client.post(
-            "/upload",
+            "/files",
             files=[
                 ("files", ("hello1.txt", b"Hello")),
                 ("files", ("hello2.txt", b"Hello")),
@@ -539,11 +539,11 @@ class TestHeadersCookies03:
 @pytest.mark.asyncio
 class TestRequestObject01:
     async def test_request(self, client: httpx.AsyncClient):
-        response = await client.get("/request")
+        response = await client.get("/")
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"path": "/request"}
+        assert json == {"path": "/"}
 
 
 @pytest.mark.fastapi(app=chapter3_response_path_parameters_01_app)
