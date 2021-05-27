@@ -2,6 +2,7 @@ aerich==0.5.3
 aiofiles==0.7.0
 aiosqlite==0.16.1
 alembic==1.6.3
+broadcaster[redis]==0.2.0
 databases[sqlite]==0.4.3
 fastapi==0.65.1
 motor==2.4.

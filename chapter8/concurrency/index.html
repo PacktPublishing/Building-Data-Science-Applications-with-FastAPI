@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+  <title>Chapter 8 WebSockets Concurrency</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="my-3">Chapter 8 WebSockets Concurrency</h1>
+    <form id="form">
+      <div class="input-group mb-3">
+        <input id="message" type="text" class="form-control" placeholder="Message" required>
+        <button class="btn btn-primary" type="submit" id="button-addon2">Send</button>
+      </div>
+    </form>
+    <ul id="messages"></ul>
+  </div>
+
+  <script>
+    const addMessage = (message, sender) => {
+      const messages = document.getElementById('messages');
+
+      const messageItem = document.createElement('li');
+      messageItem.innerText = message;
+      if (sender === 'client') {
+        messageItem.setAttribute('class', 'text-success');
+      } else {
+        messageItem.setAttribute('class', 'text-warning');
+      }
+
+      messages.appendChild(messageItem);
+    };
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const socket = new WebSocket('ws://localhost:8000/ws');
+
+      // Connection opened
+      socket.addEventListener('open', function (event) {
+
+        // Send message on form submission
+        document.getElementById('form').addEventListener('submit', (event) => {
+          event.preventDefault();
+          const message = document.getElementById('message').value;
+
+          addMessage(message, 'client');
+
+          socket.send(message);
+
+          event.target.reset();
+        });
+      });
+
+      // Listen for messages
+      socket.addEventListener('message', function (event) {
+        addMessage(event.data, 'server');
+      });
+    });
+  </script>
+</body>
+
+</html>
