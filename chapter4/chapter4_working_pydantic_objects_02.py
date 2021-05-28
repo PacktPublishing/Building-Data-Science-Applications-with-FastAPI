@@ -42,11 +42,10 @@ person = Person(
 )
 
 person_include = person.dict(include={"first_name", "last_name"})
-assert person_include == {"first_name": "John", "last_name": "Doe"}
+print(person_include)  # {"first_name": "John", "last_name": "Doe"}
 
 person_exclude = person.dict(exclude={"birthdate", "interests"})
-assert "birthdate" not in person_exclude
-assert "interests" not in person_exclude
+print(person_exclude)
 
 person_nested_include = person.dict(
     include={
@@ -55,8 +54,5 @@ person_nested_include = person.dict(
         "address": {"city", "country"},
     }
 )
-assert person_nested_include == {
-    "first_name": "John",
-    "last_name": "Doe",
-    "address": {"city": "Woodtown", "country": "US"},
-}
+# {"first_name": "John", "last_name": "Doe", "address": {"city": "Woodtown", "country": "US"}}
+print(person_nested_include)

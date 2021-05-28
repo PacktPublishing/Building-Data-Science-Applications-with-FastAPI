@@ -22,8 +22,7 @@ try:
     Person(first_name="John", last_name="Doe", birthdate="1800-01-01")
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 # Valid
 person = Person(first_name="John", last_name="Doe", birthdate="1991-01-01")
-assert isinstance(person, Person)
+print(person)  # first_name='John' last_name='Doe' birthdate='foo'

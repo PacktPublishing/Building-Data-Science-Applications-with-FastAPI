@@ -14,7 +14,6 @@ try:
     Person(first_name="J", last_name="Doe", age=30)
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 
 # Invalid age
@@ -22,11 +21,8 @@ try:
     Person(first_name="John", last_name="Doe", age=2000)
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 
 # Valid
 person = Person(first_name="John", last_name="Doe", age=30)
-assert person.first_name == "John"
-assert person.last_name == "Doe"
-assert person.age == 30
+print(person)  # first_name='John' last_name='Doe' age=30

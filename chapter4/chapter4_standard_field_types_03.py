@@ -44,7 +44,6 @@ try:
     )
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 # Valid
 person = Person(
@@ -60,4 +59,4 @@ person = Person(
         "country": "US",
     },
 )
-assert isinstance(person.address, Address)
+print(person)

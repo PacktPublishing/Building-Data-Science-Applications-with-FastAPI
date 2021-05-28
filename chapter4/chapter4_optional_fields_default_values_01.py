@@ -10,5 +10,4 @@ class UserProfile(BaseModel):
 
 
 user = UserProfile(nickname="jdoe")
-assert user.location is None
-assert user.subscribed_newsletter is True
+print(user)  # nickname='jdoe' location=None subscribed_newsletter=True

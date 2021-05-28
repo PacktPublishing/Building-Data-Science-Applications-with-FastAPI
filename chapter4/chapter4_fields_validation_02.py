@@ -15,14 +15,14 @@ class Model(BaseModel):
 
 
 o1 = Model()
-assert o1.l == ["a", "b", "c"]
-assert o1.l2 == []
+print(o1.l)  # ["a", "b", "c"]
+print(o1.l2)  # []
 
 o1.l.append("d")
-assert o1.l == ["a", "b", "c", "d"]
+print(o1.l)  # ["a", "b", "c", "d"]
 
 o2 = Model()
-assert o2.l == ["a", "b", "c"]
-assert o1.l2 == []
+print(o2.l)  # ["a", "b", "c"]
+print(o1.l2)  # []
 
-assert o1.d < o2.d
+print(o1.d < o2.d)  # True

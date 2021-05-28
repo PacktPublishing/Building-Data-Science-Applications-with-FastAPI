@@ -30,7 +30,6 @@ try:
     )
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 
 # Invalid birthdate
@@ -44,7 +43,6 @@ try:
     )
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 
 # Valid
@@ -55,6 +53,5 @@ person = Person(
     birthdate="1991-01-01",
     interests=["travel", "sports"],
 )
-assert person.gender == Gender.MALE
-assert person.birthdate == date(1991, 1, 1)
-assert person.interests == ["travel", "sports"]
+# first_name='John' last_name='Doe' gender=<Gender.MALE: 'MALE'> birthdate=datetime.date(1991, 1, 1) interests=['travel', 'sports']
+print(person)

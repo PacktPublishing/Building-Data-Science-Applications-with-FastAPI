@@ -42,5 +42,5 @@ person = Person(
 )
 
 person_dict = person.dict()
-assert person_dict["first_name"] == "John"
-assert person_dict["address"]["street_address"] == "12 Squirell Street"
+print(person_dict["first_name"])  # "John"
+print(person_dict["address"]["street_address"])  # "12 Squirell Street"

@@ -45,4 +45,4 @@ person = Person(
 )
 
 name_dict = person.name_dict()
-assert name_dict == {"first_name": "John", "last_name": "Doe"}
+print(name_dict)  # {"first_name": "John", "last_name": "Doe"}

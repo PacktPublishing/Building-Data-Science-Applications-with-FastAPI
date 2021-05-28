@@ -22,10 +22,10 @@ try:
     )
 except ValidationError as e:
     print(str(e))
-    assert len(e.errors()) == 1
 
 # Valid
 user_registration = UserRegistration(
     email="jdoe@example.com", password="aa", password_confirmation="aa"
 )
-assert isinstance(user_registration, UserRegistration)
+# email='jdoe@example.com' password='aa' password_confirmation='aa'
+print(user_registration)

@@ -14,4 +14,4 @@ class Model(BaseModel):
 
 
 m = Model(values="1,2,3")
-assert m.values == [1, 2, 3]
+print(m.values)  # [1, 2, 3]
