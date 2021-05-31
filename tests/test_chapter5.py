@@ -173,14 +173,14 @@ class TestClassDependency01:
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"skip": 10, "limit": 100}
+        assert json == {"skip": 10, "limit": 50}
 
     async def test_custom_pagination(self, client: httpx.AsyncClient, path: str):
-        response = await client.get(path, params={"skip": 10, "limit": 100})
+        response = await client.get(path, params={"skip": 10, "limit": 50})
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"skip": 10, "limit": 100}
+        assert json == {"skip": 10, "limit": 50}
 
 
 @pytest.mark.fastapi(app=chapter5_class_dependency_02_app)
@@ -208,14 +208,14 @@ class TestClassDependency02:
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"skip": 10, "limit": 100}
+        assert json == {"skip": 10, "limit": 50}
 
     async def test_skip_limit_custom_pagination(self, client: httpx.AsyncClient):
-        response = await client.get("/items", params={"skip": 10, "limit": 100})
+        response = await client.get("/items", params={"skip": 10, "limit": 50})
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"skip": 10, "limit": 100}
+        assert json == {"skip": 10, "limit": 50}
 
     async def test_page_size_default_pagination(self, client: httpx.AsyncClient):
         response = await client.get("/things")
@@ -239,14 +239,14 @@ class TestClassDependency02:
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"page": 10, "size": 100}
+        assert json == {"page": 10, "size": 50}
 
     async def test_page_size_custom_pagination(self, client: httpx.AsyncClient):
-        response = await client.get("/things", params={"page": 10, "size": 100})
+        response = await client.get("/things", params={"page": 10, "size": 50})
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
-        assert json == {"page": 10, "size": 100}
+        assert json == {"page": 10, "size": 50}
 
 
 @pytest.mark.fastapi(app=chapter5_path_dependency_01_app)

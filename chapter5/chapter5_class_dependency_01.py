@@ -18,7 +18,7 @@ class Pagination:
         return (skip, capped_limit)
 
 
-pagination = Pagination(100)
+pagination = Pagination(maximum_limit=50)
 
 
 @app.get("/items")
