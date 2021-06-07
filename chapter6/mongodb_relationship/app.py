@@ -12,8 +12,8 @@ from chapter6.mongodb_relationship.models import (
 )
 
 app = FastAPI()
-motor_client = AsyncIOMotorClient("mongodb://localhost:27017")
-database = motor_client["chapter6_mongo_relationship"]
+motor_client = AsyncIOMotorClient("mongodb://localhost:27017")  # Connection to the whole server
+database = motor_client["chapter6_mongo_relationship"]  # Single database instance
 
 
 def get_database() -> AsyncIOMotorDatabase:
