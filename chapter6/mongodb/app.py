@@ -11,7 +11,9 @@ from chapter6.mongodb.models import (
 )
 
 app = FastAPI()
-motor_client = AsyncIOMotorClient("mongodb://localhost:27017")  # Connection to the whole server
+motor_client = AsyncIOMotorClient(
+    "mongodb://localhost:27017"
+)  # Connection to the whole server
 database = motor_client["chapter6_mongo"]  # Single database instance
 
 
