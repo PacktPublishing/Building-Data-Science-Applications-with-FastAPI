@@ -3,13 +3,13 @@ from typing import List, Tuple
 from fastapi import Depends, FastAPI, Query, status
 from tortoise.contrib.fastapi import register_tortoise
 
-from chapter10.project.models import (
+from app.models import (
     PostDB,
     PostCreate,
     PostPartialUpdate,
     PostTortoise,
 )
-from chapter10.project.settings import Settings
+from app.settings import Settings
 
 settings = Settings()
 app = FastAPI()
@@ -74,7 +74,7 @@ TORTOISE_ORM = {
     "connections": {"default": settings.database_url},
     "apps": {
         "models": {
-            "models": ["chapter10.project.models"],
+            "models": ["app.models"],
             "default_connection": "default",
         },
     },
