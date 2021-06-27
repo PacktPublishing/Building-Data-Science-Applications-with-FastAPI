@@ -20,6 +20,7 @@ async def receive_message(websocket: WebSocket, username: str):
     async with broadcast.subscribe(channel=CHANNEL) as subscriber:
         async for event in subscriber:
             message_event = MessageEvent.parse_raw(event.message)
+            # Discard user's own messages
             if message_event.username != username:
                 await websocket.send_json(message_event.dict())
 
@@ -36,10 +37,10 @@ async def websocket_endpoint(websocket: WebSocket, username: str = "Anonymous"):
     try:
         while True:
             receive_message_task = asyncio.create_task(
-                send_message(websocket, username)
+                receive_message(websocket, username)
             )
             send_message_task = asyncio.create_task(
-                receive_message(websocket, username)
+                send_message(websocket, username)
             )
             done, pending = await asyncio.wait(
                 {receive_message_task, send_message_task},
