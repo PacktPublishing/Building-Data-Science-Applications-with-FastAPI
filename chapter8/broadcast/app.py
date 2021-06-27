@@ -39,9 +39,7 @@ async def websocket_endpoint(websocket: WebSocket, username: str = "Anonymous"):
             receive_message_task = asyncio.create_task(
                 receive_message(websocket, username)
             )
-            send_message_task = asyncio.create_task(
-                send_message(websocket, username)
-            )
+            send_message_task = asyncio.create_task(send_message(websocket, username))
             done, pending = await asyncio.wait(
                 {receive_message_task, send_message_task},
                 return_when=asyncio.FIRST_COMPLETED,
