@@ -2,7 +2,7 @@ import asyncio
 from typing import Optional, cast
 
 import pytest
-from fastapi import params, status
+from fastapi import status
 from fastapi.testclient import TestClient
 from starlette.testclient import WebSocketTestSession
 from starlette.websockets import WebSocketDisconnect

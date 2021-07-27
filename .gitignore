@@ -112,3 +112,6 @@ ENV/
 
 # SQLite databases
 *.db*
+
+# Joblib
+/*.joblib
