@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import httpx
 import pytest
+import pytest_asyncio
 from fastapi import status
 from tortoise import Tortoise
 
@@ -19,7 +20,7 @@ DATABASE_FILE_PATH = "chapter7_csrf.test.db"
 DATABASE_URL = f"sqlite://{DATABASE_FILE_PATH}"
 
 
-@pytest.fixture(autouse=True, scope="module")
+@pytest_asyncio.fixture(autouse=True, scope="module")
 async def initialize_database():
     await Tortoise.init(
         db_url=DATABASE_URL,

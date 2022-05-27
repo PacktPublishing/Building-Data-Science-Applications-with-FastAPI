@@ -3,6 +3,7 @@ import asyncio
 
 import httpx
 import pytest
+import pytest_asyncio
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -17,7 +18,7 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(
     request: pytest.FixtureRequest,
 ) -> AsyncGenerator[httpx.AsyncClient, None]:

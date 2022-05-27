@@ -3,6 +3,7 @@ from typing import Any, Dict
 
 import httpx
 import pytest
+import pytest_asyncio
 from asgi_lifespan import LifespanManager
 from fastapi import status
 
@@ -35,7 +36,7 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_client():
     app.dependency_overrides[external_api] = MockExternalAPI()
     async with LifespanManager(app):
@@ -43,7 +44,7 @@ async def test_client():
             yield test_client
 
 
-@pytest.mark.asyncio
+@pytest_asyncio.fixture
 async def test_get_employees(test_client: httpx.AsyncClient):
     response = await test_client.get("/employees")
 

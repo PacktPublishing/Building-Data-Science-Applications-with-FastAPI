@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional
 
 import httpx
 import pytest
+import pytest_asyncio
 import sqlalchemy
 from databases import Database
 from fastapi import status
@@ -18,7 +19,7 @@ database_test = Database(DATABASE_URL)
 sqlalchemy_engine = sqlalchemy.create_engine(DATABASE_URL)
 
 
-@pytest.fixture(autouse=True, scope="module")
+@pytest_asyncio.fixture(autouse=True, scope="module")
 async def initialize_database():
     metadata.create_all(sqlalchemy_engine)
 

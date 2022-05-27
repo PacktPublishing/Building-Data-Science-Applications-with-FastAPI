@@ -3,6 +3,7 @@ from typing import List
 
 import httpx
 import pytest
+import pytest_asyncio
 from asgi_lifespan import LifespanManager
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
@@ -26,7 +27,7 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_client():
     app.dependency_overrides[get_database] = get_test_database
     async with LifespanManager(app):
@@ -34,7 +35,7 @@ async def test_client():
             yield test_client
 
 
-@pytest.fixture(autouse=True, scope="module")
+@pytest_asyncio.fixture(autouse=True, scope="module")
 async def initial_posts():
     initial_posts = [
         PostDB(title="Post 1", content="Content 1"),

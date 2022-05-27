@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional
 
 import httpx
 import pytest
+import pytest_asyncio
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from fastapi import status
@@ -33,7 +34,7 @@ not_existing_id = str(ObjectId())
 invalid_id = "aaa"
 
 
-@pytest.fixture(autouse=True, scope="module")
+@pytest_asyncio.fixture(autouse=True, scope="module")
 async def initialize_database():
     await database_test["posts"].insert_many(
         [post.dict(by_alias=True) for post in initial_posts]

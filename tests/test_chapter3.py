@@ -726,7 +726,7 @@ class TestCustomResponse01:
 @pytest.mark.asyncio
 class TestCustomResponse02:
     async def test_redirect(self, client: httpx.AsyncClient):
-        response = await client.get("/redirect", allow_redirects=False)
+        response = await client.get("/redirect")
 
         assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
         assert response.headers["location"] == "/new-url"
@@ -736,7 +736,7 @@ class TestCustomResponse02:
 @pytest.mark.asyncio
 class TestCustomResponse03:
     async def test_redirect(self, client: httpx.AsyncClient):
-        response = await client.get("/redirect", allow_redirects=False)
+        response = await client.get("/redirect")
 
         assert response.status_code == status.HTTP_301_MOVED_PERMANENTLY
         assert response.headers["location"] == "/new-url"
