@@ -26,7 +26,7 @@ def fill_db():
 @pytest.mark.asyncio
 class TestUsersRouter:
     async def test_all(self, client: httpx.AsyncClient):
-        response = await client.get("/users")
+        response = await client.get("/users/")
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
@@ -46,13 +46,13 @@ class TestUsersRouter:
 
     async def test_create_invalid(self, client: httpx.AsyncClient):
         payload = {"foo": "bar"}
-        response = await client.post("/users", json=payload)
+        response = await client.post("/users/", json=payload)
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_create_valid(self, client: httpx.AsyncClient):
         payload = {"email": "user4@example.com"}
-        response = await client.post("/users", json=payload)
+        response = await client.post("/users/", json=payload)
 
         assert response.status_code == status.HTTP_201_CREATED
         json = response.json()
@@ -75,7 +75,7 @@ class TestUsersRouter:
 @pytest.mark.asyncio
 class TestPostsRouter:
     async def test_all(self, client: httpx.AsyncClient):
-        response = await client.get("/posts")
+        response = await client.get("/posts/")
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
@@ -95,13 +95,13 @@ class TestPostsRouter:
 
     async def test_create_invalid(self, client: httpx.AsyncClient):
         payload = {"title": "Post 4"}
-        response = await client.post("/posts", json=payload)
+        response = await client.post("/posts/", json=payload)
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_create_not_existing_user(self, client: httpx.AsyncClient):
         payload = {"user": 4, "title": "Post 4"}
-        response = await client.post("/posts", json=payload)
+        response = await client.post("/posts/", json=payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         json = response.json()
@@ -109,7 +109,7 @@ class TestPostsRouter:
 
     async def test_create_valid(self, client: httpx.AsyncClient):
         payload = {"user": 1, "title": "Post 4"}
-        response = await client.post("/posts", json=payload)
+        response = await client.post("/posts/", json=payload)
 
         assert response.status_code == status.HTTP_201_CREATED
         json = response.json()

@@ -146,7 +146,7 @@ class TestPathParameters01:
 @pytest.mark.asyncio
 class TestPathParameters02:
     async def test_get_company_id(self, client: httpx.AsyncClient):
-        response = await client.get("/users/standard/123")
+        response = await client.get("/users/standard/123/")
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
@@ -157,13 +157,13 @@ class TestPathParameters02:
 @pytest.mark.asyncio
 class TestPathParameters03:
     async def test_get_invalid_type(self, client: httpx.AsyncClient):
-        response = await client.get("/users/foo/123")
+        response = await client.get("/users/foo/123/")
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     @pytest.mark.parametrize("type", ["standard", "admin"])
     async def test_get_standard_user(self, client: httpx.AsyncClient, type: str):
-        response = await client.get(f"/users/{type}/123")
+        response = await client.get(f"/users/{type}/123/")
 
         assert response.status_code == status.HTTP_200_OK
         json = response.json()
