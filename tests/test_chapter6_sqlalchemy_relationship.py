@@ -115,6 +115,7 @@ class TestChapter6SQLAlchemyRelationship:
         "id,payload,status_code,nb_comments",
         [
             (1, {"title": "Post 1 Updated"}, status.HTTP_200_OK, 3),
+            (2, {"title": "Post 2 Updated"}, status.HTTP_200_OK, 0),
             (10, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND, 0),
         ],
     )

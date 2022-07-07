@@ -94,6 +94,7 @@ class TestChapter6SQLAlchemy:
         "id,payload,status_code",
         [
             (1, {"title": "Post 1 Updated"}, status.HTTP_200_OK),
+            (2, {"title": "Post 2 Updated"}, status.HTTP_200_OK),
             (10, {"title": "Post 10 Updated"}, status.HTTP_404_NOT_FOUND),
         ],
     )

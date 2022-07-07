@@ -88,9 +88,9 @@ async def update_post(
         .where(posts.c.id == post.id)
         .values(post_update.dict(exclude_unset=True))
     )
-    post_id = await database.execute(update_query)
+    await database.execute(update_query)
 
-    post_db = await get_post_or_404(post_id, database)
+    post_db = await get_post_or_404(post.id, database)
 
     return post_db
 
