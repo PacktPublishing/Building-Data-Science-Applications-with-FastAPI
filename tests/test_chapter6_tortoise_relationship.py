@@ -144,11 +144,19 @@ class TestChapter6TortoiseRelationship:
 
         assert response.status_code == status_code
 
+    async def test_create_comment_not_existing_post(self, client: httpx.AsyncClient):
+        response = await client.post(
+            "/comments", json={"post_id": 10, "content": "New comment"}
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        json = response.json()
+        assert json["detail"] == "Post 10 does not exist"
+
     @pytest.mark.parametrize(
         "payload,status_code",
         [
             ({"post_id": 2, "content": "New comment"}, status.HTTP_201_CREATED),
-            ({"post_id": 10, "content": "New comment"}, status.HTTP_400_BAD_REQUEST),
             ({}, status.HTTP_422_UNPROCESSABLE_ENTITY),
         ],
     )

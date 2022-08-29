@@ -121,7 +121,8 @@ async def create_comment(
 
     if post is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Post {id} does not exist"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Post {comment.post_id} does not exist",
         )
 
     insert_query = comments.insert().values(comment.dict())

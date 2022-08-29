@@ -77,7 +77,8 @@ async def create_comment(comment: CommentBase) -> CommentDB:
         await PostTortoise.get(id=comment.post_id)
     except DoesNotExist:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Post {id} does not exist"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Post {comment.post_id} does not exist",
         )
 
     comment_tortoise = await CommentTortoise.create(**comment.dict())
