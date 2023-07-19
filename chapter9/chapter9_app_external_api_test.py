@@ -44,7 +44,7 @@ async def test_client():
             yield test_client
 
 
-@pytest_asyncio.fixture
+@pytest.mark.asyncio
 async def test_get_employees(test_client: httpx.AsyncClient):
     response = await test_client.get("/employees")
 
