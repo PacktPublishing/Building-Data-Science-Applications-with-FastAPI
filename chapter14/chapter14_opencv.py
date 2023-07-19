@@ -17,7 +17,7 @@ while True:
     faces = face_cascade.detectMultiScale(gray)
 
     # Draw a rectangle around the faces
-    for (x, y, w, h) in faces:
+    for x, y, w, h in faces:
         cv2.rectangle(
             img=frame,
             pt1=(x, y),
